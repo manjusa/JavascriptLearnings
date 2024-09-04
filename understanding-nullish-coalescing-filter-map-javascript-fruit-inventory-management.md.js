@@ -26,7 +26,8 @@ const newStock = [
   { id: 102, name: "Blueberry", inStock: true },
 ];
 
-//I want to create a global object. Say it is consumed by a third party app. Third party app requires "inStock","outofStock" and "newStock" separetely
+//I want to create a global object. Say it is consumed by a third party app. Third party app requires "inStock","outofStock" and
+//"newStock" separetely
 // Approach1
 const inStock = fruitsInStore.filter((x) => x.inStock);
 const outStock = fruitsInStore.filter((x) => !x.inStock);
@@ -53,10 +54,10 @@ console.log("Approach1:- ", allFruits());
 const allFruits1 = () => [
   ...fruitsInStore
     .filter((x) => x.inStock)
-    .map((z) => ({ ...z, orderAgain: "no" })),
+    .map((z) => ({ ...z, orderAgain: "no" } ?? [])), // Use nullish coalescing,
   ...fruitsInStore
     .filter((x) => !x.inStock)
-    .map((z) => ({ ...z, orderAgain: "yes" })),
+    .map((z) => ({ ...z, orderAgain: "yes" } ?? [])), // Use nullish coalescing,
   ...newStock,
 ];
 console.log("Approach2:- ", allFruits1());
