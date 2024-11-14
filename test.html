@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accessibility Issues Example</title>
+  </head>
+  <body>
+    <h1>Welcome to My Website</h1>
+
+    <p>This is a paragraph without any descriptive text.</p>
+
+    <!-- <img src="image.jpg" alt="" /> -->
+    <!--     There are scnearions where lighthouse will complain
+why Lighthouse in devtools dont complain about missing alt tag for image in accessibility or SEO
+     Image Context:
+Decorative Images: If an image is purely decorative and has an empty alt attribute (e.g., alt=""),
+ Lighthouse may not flag it as an issue because it is considered appropriate for decorative images. 
+ The empty alt attribute indicates to screen readers that the image can be ignored, which is the correct approach for non-informative images.
+
+Contextual Relevance: If the image is part of a context where its absence does not significantly impact understanding
+ (e.g., a logo that is not critical to the content), Lighthouse may not raise a flag.
+
+ -->
+    <img src="weather-forecast.png" />
+    <!-- Missing alt text -->
+
+    <a href="https://example.com" style="color: red">Click here</a>
+    <!-- Link text is not descriptive -->
+
+    <button onclick="alert('Hello!')">Button</button>
+    <!-- Button lacks accessible name -->
+
+    <ul>
+      <li>Item 1</li>
+      <li>Item 2</li>
+      <li>Item 3</li>
+    </ul>
+
+    <div style="background-color: yellow; color: white">
+      This text has poor contrast.
+    </div>
+    <!-- Poor color contrast -->
+
+    <footer>
+      <p>
+        Contact us at <a href="mailto:info@example.com">info@example.com</a>
+      </p>
+    </footer>
+  </body>
+</html>
