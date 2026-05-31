@@ -1,0 +1,178 @@
+1-   day3 -reduce
+
+//WRONG i did -task1
+
+ const usersWithValidAge= users.filter(user=>user.age !=null && user.age != undefined);
+ const totalAge= usersWithValidAge.reduce((x,y)=>x.age+y.age,0);
+ totalAge
+
+//CORRECT approach
+
+The issue in your reduce is with the accumulator and current value usage. You're passing (x, y) => x.age + y.age, but in reduce, the accumulator (x) is the accumulated value, and the second parameter (y) is the current element of the array.
+
+Since you want to sum ages, the accumulator should be a number representing the total so far, and the current should be the user object
+
+
+// Another thing i learnt reduce
+In Array.prototype.reduce, the accumulator must be returned in every iteration to be passed to the next one. If you don't return it, the accumulator becomes undefined after the first iteration, and the final result will be undefined.
+
+
+// Another thing i learnt reduce
+
+Always return acc at the end of the reducer function, even if your IF condition fails. My 'return acc' was inside IF which was leading to Error
+______________________________________________________________________________________
+day4 -reduce chaining etc
+
+//a)learnt but about filter (from day1 as well)
+ 
+  [firstName, lastName].filter(Boolean).join(" ") can behave like this:
+
+["John", "Doe"] → "John Doe"
+["John", ""] → "John"
+["", "Doe"] → "Doe"
+["", ""] → "" ← empty string
+So if both are missing, it does not become " " (a space).
+It becomes an empty string "".
+
+Why?
+
+filter(Boolean) removes empty values like "", null, undefined, 0, false
+If both names are missing, the array becomes []
+[].join(" ") returns ""
+So this part:
+
+|| "Unknown"
+means:
+
+if the joined result is empty (""), use "Unknown" instead
+
+//b TS quick usage few egs option1) array ,Option1a) and option2) in reduce 2 
+
+ // option1 -Generic at reduce level -better
+const fullNames = users.reduce<string[]>((acc, user) => {
+  acc.push(user.firstName);
+  return acc;
+}, []);
+
+ // option1 a - Generic at parameter "acc" level
+const fullNames = users.reduce((acc:string[], user) => {
+  acc.push(user.firstName);
+  return acc;
+}, []);
+
+// option2 
+// If the accumulator is a more complex object
+// example:
+
+type Acc = {
+  names: string[];
+  count: number;
+};
+
+const result = users.reduce((acc: Acc, user) => {
+  acc.names.push(user.firstName);
+  acc.count++;
+  return acc;
+}, { names: [], count: 0 });*/
+  
+
+Q) Does below mutate original array
+
+   ```JS
+     users
+    .filter(user => user.age > 30)
+    .sort((a, b) => a.age - b.age)
+  ```
+    A) Yes — .sort() mutates the array it’s called on.
+    However my above answer DOESNOT mutate original array
+  because filter() creates a new array first, and then sort() mutates that new filtered array.
+    More safer way 
+    
+    ```JS    
+      const sorted = [...users].sort((a, b) => a.age - b.age);
+    ```JS    
+   
+    ## in nutshell:
+    ```JS
+        users.sort(...) → mutates users
+        users.filter(...).sort(...) → mutates only the filtered result, not users
+        ```JS
+
+Q) another takeaway
+  
+  💡 Important Architectural Thinking
+
+    If your goal is:
+           array → array
+           
+  then usually:
+      "map"  is more readable than: "reduce"
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        
+  day5 
+
+Task1 - my  submission- better one in real answr
+const updateOneUser = users.filter(user=>user.firstName==="Sam").map((user)=>{
+  const newUser= {...user,age:'15'};
+  return newUser;
+});
+
+Task3 - add new prop; my  submission- better one in real answr
+
+const userWithNewProp = users.map(user =>
+  user.age >= 18
+    ? { ...user, isAdult: true }
+    : { ...user, isAdult: false }
+);
+
+Task4 - remove one user from users (by id for eg)
+- use "filter()"" returns a new array, so users stays unchanged.
+
+Task5-
+  - JavaScript objects and arrays are:"reference types"
+Meaning:
+
+```js
+const a = obj;
+const b = a;
+```
+
+Both variables point to: same memory reference
+
+when you do [...users] for eg, it does shalow copy (i.e child {}/[] are shared)..i.e
+only upar ke {} are copied while inner children are same references
+
+- my  submission- better one in real answr
+const users2=[...users1];// shallow copy
+users2.address={...users1.address} //now address also copied 
+users2.address===users1.address;//false
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+  
+day6- my  submission- correct one in real answr
+
+Task1- 
+  const counter = () => {
+  let count = 0;
+  return function updateCounter() {
+    count++;
+    //return count
+  };
+};
+
+counter()(); // 1
+counter()(); // 1 again, because each call creates a new counter
+
+- two things wrong with above submission of mine
+1) initially i was not "returning count" inside updateCounter which is required . correct way is to return count (commented section)
+"counter()() calls the inner function, so it increments count, but since updateCounter() doesn’t return anything, the result is undefined.""
+2) I was get 1 printed all time 
+- counter() creates a new private count
+- counter()() invokes the returned function once
+ - if you want the count to keep increasing, store the returned function:(and thats how i implemented asnwer too)
+ const c = counter();
+c(); // 1
+c(); // 2
+c(); // 3
