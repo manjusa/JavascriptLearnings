@@ -1,3 +1,6 @@
+Refer CheatSheet for difference function syntaxes
+-----------------------------------------------------------------------------
+
 1-   day3 -reduce
 
 //WRONG i did -task1
@@ -176,3 +179,238 @@ counter()(); // 1 again, because each call creates a new counter
 c(); // 1
 c(); // 2
 c(); // 3
+
+----------------------------------------------------------------------------------------------------------------------------------------
+  
+day7- my  submission - correct one in real answr
+
+//task2 submission
+
+const pipe = (name) =>{  
+       return addGreeting(toUpperCase(trimString(name)));       
+   };
+pipe(" john ");
+
+//feedback
+Not quite — your pipe is doing the transformation immediately, but the task wants pipe to be a function creator that accepts functions and returns a new function.
+
+//what to takeway
+Step 1: calling pipe
+  - pipe(trimString, toUpperCase, addGreeting)
+
+So inside pipe:
+fns = [trimString, toUpperCase, addGreeting]
+
+It returns a new function:
+(value) => fns.reduce((acc, fn) => fn(acc), value
+So now:
+transform = returned function     
+                      
+fns.reduce((acc, fn) => fn(acc), value)
+Which means:
+[trimString, toUpperCase, addGreeting].reduce((acc, fn) => fn(acc), "  john  ")
+
+Step 2: calling transform("  john  ")
+Now:
+value = "  john  "
+We evaluate:
+
+fns.reduce((acc, fn) => fn(acc), value)
+Which means:
+
+[trimString, toUpperCase, addGreeting].reduce((acc, fn) => fn(acc), "  john  ")
+
+How reduce works here
+Yes — here it is in a compact table:
+
+Step	  || acc before	|| fn used	    || Function call	    || Result	    || acc after
+
+Initial     	—	            —	            —	                      —            " john  "
+
+1	          "  john  "	  trimString	    trimString("  john  ")	"john"	      "john"
+2	          "john"	      toUpperCase	    toUpperCase("john")	    "JOHN"	      "JOHN"
+3	          "JOHN"	      addGreeting	    addGreeting("JOHN")	  "Hello JOHN"	"Hello JOHN"
+
+
+
+//task3 compose (right to left)
+- just reverse the args (...fns)
+- do fns.reverse and NOT ...fns.revese (... can only be used in places like function calls or array literals, not in a variable assignment.)
+     * const reverseArgs = ...fns.reverse(); //INVALID Syntax
+
+//task 4 - my submission lot many mistakes.correct one in real answr
+
+
+const filterActiveUsers= (users)=> users.filter(user=>user.isActive);
+//filterActiveUsers(users)
+const fullNameOfUser = (users)=> users.map(user=>{  
+    return ([user.firstName,user.lastName].filter(Boolean).join(" "));
+});   
+// fullNameOfUser(users);
+const upperCase = (users)=> users.map(user=>{  
+    return{
+      ...user,
+      firstName: user.firstName?.toUpperCase(),
+      lastName: user.lastName?.toUpperCase()
+    };
+});   
+// upperCase(users)
+
+const sortAlphabetically = (users)=> users.sort((a,b)=> {
+   return b.firstName - a.firstName
+    });
+ 
+ sortAlphabetically(users)
+
+const newPipe= (...fns)=>{
+  
+ return fns.reduce((acc,fn)=>{
+    return fn(acc)
+  },users)
+}
+//feedback
+
+What’s wrong
+1. fullNameOfUser returns strings, but upperCase expects user objects
+
+- After fullNameOfUser, you no longer have firstName / lastName fields.
+
+2. sortAlphabetically is wrong
+
+ - b.firstName - a.firstName only works for numbers, not names.
+-  Use localeCompare.
+  follow up question. What does localecompare do ?
+ A) localeCompare compares two strings in a way that's meant for human-friendly alphabetical sorting.
+
+"a".localeCompare("b") // -1
+"b".localeCompare("a") // 1
+"a".localeCompare("a") // 0
+In sorting
+["Zoe", "Ana", "bob"].sort((a, b) => a.localeCompare(b));
+This gives a proper alphabetical order:
+
+["Ana", "bob", "Zoe"]
+
+3. sortAlphabetically(users) mutates the original array
+- Better to sort a copy: [...items].sort(...)
+
+4. newPipe is incorrect
+- It should start from the input value, not users.
+Right now it ignores the value you pass in.
+                                         
+- My follow up question)You just pass users object to process users..how it works then ?
+
+Because processUsers is created by newPipe(...), and newPipe returns a function that accepts the input later.
+
+Here’s the idea:
+
+const newPipe = (...fns) => {
+  return (value) => fns.reduce((acc, fn) => fn(acc), value);
+};
+
+What happens step by step
+When you do:
+
+const processUsers = newPipe(
+  filterActiveUsers,
+  fullNameOfUser,
+  upperCase,
+  sortAlphabetically
+);
+you are creating a new function equivalent to:
+
+const processUsers = (value) => {
+  return [filterActiveUsers, fullNameOfUser, upperCase, sortAlphabetically]
+    .reduce((acc, fn) => fn(acc), value);
+};
+So later, when you call:
+
+processUsers(users);
+that users array becomes the starting value.
+
+How reduce applies the pipeline
+If users is the input, then this happens:
+
+filterActiveUsers(users)
+result goes into fullNameOfUser(...)
+result goes into upperCase(...)
+result goes into sortAlphabetically(...)
+
+- Another small eg to explain my follow up question
+const add1 = (x) => x + 1;
+const double = (x) => x * 2;
+
+const pipe = (...fns) => (value) => fns.reduce((acc, fn) => fn(acc), value);
+
+const doMath = pipe(add1, double);
+
+doMath(3); // (3 + 1) * 2 = 8
+----------------------------------------------------------------------------------------------------------------------------
+day8- task1 - my submission lot many mistakes.correct one in real answr
+
+//task1 - my submission
+
+//a global function
+function test(){
+  console.log("global", this);
+}
+test()
+
+//b -object methods
+const x= {
+  
+testInsideObject():{
+    console.log("inside obj", this);  
+}
+  
+testInsideObject,
+  
+}
+ testInsideObject()
+
+//c nested fn
+function testNestedGlobalEg(){
+          console.log("outside nested", this);  
+
+  nested();
+  function nested(){
+        console.log("inside nested", this);  
+
+  }
+}
+
+testNestedGlobalEg()
+
+// Feedback 
+Yes — your task1 is close, but there’s a syntax issue in the 1b , and the this behavior needs a small correction in understanding.Cleaned-up version of your task1: -look real answr
+
+## What this is in each case (look real answer and look for comments)
+## If you want "nested" to keep the outer this,Use an arrow function: eg below
+
+function testNestedGlobalEg() {
+  console.log("outside nested", this);// window
+
+  const nested = () => {
+    console.log("inside nested", this); // again window
+  };
+
+  nested();
+}
+
+testNestedGlobalEg();
+
+### What if you want "nested" to keep the outer this, and "not window". Do below
+const obj = {
+  testNestedGlobalEg1() {
+    console.log("outside nested**", this);//testNestedGlobalEg1: ƒ testNestedGlobalEg1()
+
+    const nested = () => {
+      console.log("inside nested**", this);//testNestedGlobalEg1: ƒ testNestedGlobalEg1()
+    };
+
+    nested();
+  },
+};
+
+obj.testNestedGlobalEg1();
+

@@ -1,0 +1,70 @@
+// Quick `this` cheat sheet for non-class JavaScript
+
+// 1) Plain function call
+function plainFunction() {
+  console.log("plainFunction this:", this);
+}
+plainFunction(); // browser: window (or undefined in strict mode/module)
+
+// 2) Object method (shorthand)- New Style compared to 3 .Cleanest syntax for object methods.Same this behavior as function () {} (3 waala) when called as obj.method().
+const obj1 = {
+  method() {
+    console.log("obj1.method this:", this);
+  },
+};
+obj1.method(); // this = obj1
+
+// 3) Object method (function expression) - Older style of 2
+const obj2 = {
+  method: function () {
+    console.log("obj2.method this:", this);
+  },
+};
+obj2.method(); // this = obj2
+
+// 4) Nested regular function
+function outer1() {
+  console.log("outer1 this:", this);
+
+  function inner() {
+    console.log("inner this:", this);
+  }
+
+  inner(); // plain call => browser: window
+}
+outer1();
+
+// 5) Nested arrow function -when you want to capture outer this(best for callbacks and nested helpers). Not good as object methods if you need this to be the object.
+function outer2() {
+  console.log("outer2 this:", this);
+
+  const inner = () => {
+    console.log("inner arrow this:", this);
+  };
+
+  inner(); // inherits outer2's this
+}
+outer2();
+
+// 6) Callback to array methods
+const arr = [1, 2, 3];
+arr.map(function (n) {
+  console.log("callback this:", this);
+  return n * 2;
+}); // usually window/undefined depending on strict mode
+
+// 7) Callback with thisArg-Some array methods accept a second argument to set this inside the callback.
+arr.map(function (n) {
+  console.log("callback with thisArg this:", this);
+  return n * 2;
+}, { label: "ctx" });
+
+// 8) Bound function
+function showThis() {
+  console.log("bound this:", this);
+}
+const bound = showThis.bind({ name: "boundObj" });
+bound();//Prints 
+/*this: {
+name: 'boundObj'
+}*/
