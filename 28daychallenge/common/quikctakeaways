@@ -414,3 +414,164 @@ const obj = {
 
 obj.testNestedGlobalEg1();
 
+//task2 2nd part - my submission. 1st part look real answer.2nd part also look real answer
+
+const obj1a= {
+  name: 'manju',
+  externalName: test2() {
+    console.log(this);
+  }  
+}
+obj1a.externalName();
+
+// Feedback 
+Not quite — that does not satisfy “assign the same method to a variable and call it again.”
+What you wrote is just another object method call:
+- obj1a.externalName();
+- What the task means
+You should:
+- define the method on the object
+- assign that method to a variable
+- call the variable as a normal function
+
+// What task2 wanted to teach you
+
+obj1.externalName() = method call . this points to obj1
+fn() = function call . this is no longer obj1 in browser runtime, it becomes window
+
+Key difference:
+The same function behaves differently depending on how it is called:
+
+object.method() → method call
+fn() → plain function call
+
+//task3- was ok so just see real answer
+
+//task4  my submission. Look for real answer ??
+
+const obj4= {
+  name:"manju",
+  numbers:[3,2,6,9],
+  normalFunction(){
+    this.numbers.forEach(x=>console.log(x*2));  
+  },
+  arrowFn: ()=>{
+    numbers.forEach(x=>x*2);  
+  }
+}
+obj4.arrowFn();
+obj4.normalFunction();
+
+//Feedback 
+our submission is not quite correct for the task. What the task asks
+- Inside an object method: iterate over an array; access this
+- compare regular function callback vs arrow function callback
+
+# Issues in your code
+1) normalFunction is using an arrow callback, not a regular function callback
+You wrote:
+ this.numbers.forEach(x => console.log(x * 2));
+That is an arrow callback, so it does not show the callback trap.
+
+2) arrowFn is not valid for this task
+arrowFn: () => {
+  numbers.forEach(x => x * 2);
+}
+Problems:
+numbers is not defined in that scope
+- the arrow function does not have its own this
+- it does not use this.numbers
+
+//task5 settimeout - see real answer
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+day9 before task1 i should know below
+     - "apply" (args passed as an [] ), "call" (args listed individually)
+     - on both "apply" and "call", we call them on function 
+     - "bind" also called on "function" as well, but it returns a  new function
+
+Syntax: apply
+- func.apply(thisArg, [argsArray])
+
+Syntax: call
+- func.call(thisArg, arg1, arg2, ...)
+
+Eg:
+            
+function greet(greeting, punctuation) {
+  console.log(greeting, this.name, punctuation);
+}
+
+const person = {
+  name: "Manju",
+};
+
+greet.call(person, "Hello", "!"); // call: 
+                                        // invoke immediately
+                                        // arguments passed individually. Prints 'Hello Manju !'
+
+
+greet.apply(person, ["Hi", "?"]); // apply: invoke immediately with args as array                                    
+
+// bind: returns a new function
+const boundGreet = greet.bind(person, "Hey");//prints Hey Manju !!!
+                                               // create a new function and invoke later
+
+boundGreet("!!!");
+
+//Task1 my submission below. Almost correct but some feedback. See real answer which is my submission as well
+
+## feedback for task1
+Why it works
+- helloWorld() uses this.name
+- apply(obj2) makes this inside helloWorld point to obj2
+- so it prints manju2
+
+Small note
+
+- Since helloWorld doesn’t take any parameters, apply is valid but a little unnecessary here. You could also do:
+obj1.helloWorld.call(obj2);
+or even:
+obj1.helloWorld.apply(obj2, []);
+
+Output:
+inside manju2
+
+//Task2 my submission below.  See real answer for correct answer
+
+const T2obj1 ={
+  helloWorld(personObj,separator){
+    console.log("inside",personObj.name, separator , personObj.age);
+  }   
+}
+const person = {
+  name: "manju",
+  age:12
+};
+
+T2obj1.helloWorld.apply(person,[","]);
+T2obj1.helloWorld.call(person, ",");
+
+//Task3 my submission below.  Almost correct but some feedback. See real answer which is my submission as well
+
+const T3Person1 ={
+  name:"Manju",
+  helloWorld(sep){
+    console.log("hello person1 ",this.name,sep)
+  }  
+}
+const T3Person2 ={
+  name:"Manju1",
+  helloWorld(sep){
+    console.log("hello person2 ",this.name,sep)
+  }  
+}
+
+const newFn=T3Person2.helloWorld.bind(T3Person1,","); //prints 'hello person2  Manju ,'
+//const newFn=T3Person2.helloWorld.bind(T3Person1); // here no separator (,) is sent
+                                                    //so will print whatever is sent when we call                                                               // newFn, here we send "nice",therefore prints 'hello                                                        //  person2  Manju nice'
+
+newFn("nice");
+
+

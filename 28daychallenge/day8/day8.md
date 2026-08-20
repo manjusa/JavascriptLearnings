@@ -238,25 +238,7 @@ Do not run the code until you've written your prediction.
 
 ---
 
-# 🚀 Stretch Goal
 
-Create a small object representing a bank account.
-
-Requirements:
-
-- deposit()
-- withdraw()
-- printBalance()
-
-Inside one method, use:
-
-- `setTimeout`
-- array iteration
-- nested functions
-
-Ensure `this` behaves correctly in all cases.
-
----
 
 # 🔗 Real-World Connection
 

@@ -1,0 +1,126 @@
+Q) What do you mean hoisting not done same way (function vs function expression)
+We read that about in "cheatsheet-this-day8"
+Ans) 
+a) Function declaration
+
+sayHi(); // Works because function declarations are hoisted.
+        //  whole function is available before the code line where it   appears.
+function sayHi() {
+  console.log("hi");
+}
+
+b) Function expression
+
+sayHi();// doesn't work.ReferenceError: Cannot access 'sayHi' before initialization
+        //  variable sayHi is hoisted but its value function () { ... } is not available yet i.e variable name is known early, not the function value.
+       
+const sayHi = function () {
+  console.log("hi");
+};
+
+# One more example
+console.log(a); // undefined
+var a = 10; // With var, the variable is hoisted and initialized to undefined.
+
+But with:
+
+console.log(b); // ReferenceError
+const b = 10;// b exists in a "temporal dead zone" until the declaration runs.
+
+For functions same
+
+## Short version
+Function declaration: callable before its line
+Function expression: variable exists earlier, but the function is not callable until assignment happens
+
+Q) Hoisting quick reference
+Ans)
+// Hoisting quick reference
+
+// 1) Function declaration
+declarationFn();
+function declarationFn() {
+  console.log("function declaration");
+}
+
+// 2) Function expression with const
+// expressionConst(); // ReferenceError
+const expressionConst = function () {
+  console.log("function expression with const");
+};
+expressionConst();
+
+// 3) Function expression with var
+expressionVar(); // TypeError: expressionVar is not a function .Intereting see explanation below "## Quick explanation"
+var expressionVar = function () {
+  console.log("function expression with var");
+};
+
+// 4) var variable
+console.log(varValue); // undefined
+var varValue = 10;
+
+// 5) let variable
+// console.log(letValue); // ReferenceError
+let letValue = 20;
+
+// 6) const variable
+// console.log(constValue); // ReferenceError
+const constValue = 30;
+
+## Quick explanation
+function declaration - fully hoisted; can be called before it appears
+
+const / let - hoisted, but not initialized;cannot be used before declaration
+
+var - hoisted and initialized to undefined
+    - but function expressions assigned to var are not available yet
+    
+Important difference
+var expressionVar = function () {};
+Only expressionVar is hoisted, not the function body.
+
+So this:
+
+expressionVar();
+fails because expressionVar is undefined at that moment.
+
+// JS Study Card
+
+// Function declaration
+function fn() {}
+
+// Function expression
+const fn2 = function () {};
+
+// Arrow function
+const fn3 = () => {};
+
+// Object method shorthand
+const obj1 = {
+  fn() {},
+};
+
+// Object method with function expression
+const obj2 = {
+  fn: function () {},
+};
+
+// Callback
+[1, 2, 3].map((n) => n * 2);
+
+// Hoisting
+declaredFn(); // works
+function declaredFn() {}
+
+exprFn(); // error
+const exprFn = function () {};
+
+// this
+const obj3 = {
+  name: "manju",
+  fn() {
+    console.log(this.name); // "manju"
+  },
+};
+obj3.fn();
