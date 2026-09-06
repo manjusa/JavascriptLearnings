@@ -122,4 +122,31 @@ const user = {
   },
 };
 
-user.showName();
+//user.showName();
+
+//task6 Regular Function vs Arrow Function
+
+const t6User = {
+  name: "ManjuT6",
+  regFn: function () {
+    console.log(this.name);
+  },
+  arrFn: () => {
+    console.log(this.name);
+  },
+};
+
+t6User.regFn();
+t6User.arrFn();
+
+//task7 Closure cnctn
+
+function t7OuterFn() {
+  const name = "Manju";
+  return function innerFn() {
+    console.log(name);
+  };
+}
+
+const x = t7OuterFn();
+x();

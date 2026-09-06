@@ -422,51 +422,7 @@ The answer involves:
 
 ---
 
-# 🔹 Task 8 – Predict Before Running
-
-This is the most important task today.
-
-Create several small snippets involving:
-
-- nested functions
-- `var`
-- `let`
-- closures
-- objects
-- arrow functions
-- regular functions
-
-For each snippet:
-
-1. Predict the output
-2. Explain why
-3. Run the code
-4. Compare your prediction with the actual result
-
-### 🧩 Hint
-
-Do NOT start with the console.
-
-Use this process:
-
-```text
-1. Find where the variable is declared
-        ↓
-2. Determine the current scope
-        ↓
-3. Follow the scope chain
-        ↓
-4. If `this` is involved,
-   determine how the function was called
-        ↓
-5. Predict output
-        ↓
-6. Run the code
-```
-
----
-
-# 🧠 Task 9 – Execution Context Mental Model
+# 🧠 Task 8 – Execution Context Mental Model
 
 Take one of your examples and draw the execution flow.
 
