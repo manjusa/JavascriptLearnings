@@ -304,15 +304,16 @@ user.name = "Manju";
 Now check:
 
 ```js
-console.log(user.name);
-console.log(user.country);
+console.log(user.name); // Manju
+console.log(user.country); // Australia
+console.log(parent); // {country: 'Australia'}
 ```
 
 Then check:
 
 ```js
-console.log(user.hasOwnProperty("name"));
-console.log(user.hasOwnProperty("country"));
+console.log(user.hasOwnProperty("name")); // true
+console.log(user.hasOwnProperty("country")); // false
 ```
 
 Answer:
@@ -341,7 +342,38 @@ Does prototype have it?
 
 This is the beginning of the **prototype chain**.
 
----
+## Prototype in Simple Words
+
+Think of an object as a child that can ask a parent for a property or method:
+
+```text
+object -> prototype -> Object.prototype -> null
+```
+
+- Every object has one hidden link to its prototype.
+- If a property is not found on the object, JavaScript checks its prototype.
+- `Object.getPrototypeOf(user)` is the recommended way to inspect that link.
+- `user.__proto__` is an older shorthand for the same link. `__prototype__` is not the name.
+- A normal object usually does not have `.prototype`; constructor functions do.
+- Methods placed on `Constructor.prototype` are shared by all instances created with `new Constructor()`.
+
+```js
+function User(name) {
+  this.name = name;
+}
+
+User.prototype.greet = function () {
+  console.log(`Hello, ${this.name}`);
+};
+
+const user1 = new User("Manju");
+const user2 = new User("John");
+
+user1.greet(); //Hello Manju
+user2.greet(); //Hello John
+```
+
+## The method is stored once in `User.prototype`, but both objects can use it.
 
 # Task 7 — Prototype Method
 
@@ -455,6 +487,55 @@ animal
  └── eat
 ```
 
+#### My Submission
+
+```JS
+const animal = {
+  eat() {
+    console.log("Eating");
+  },
+};
+
+const dog = Object.create(animal);
+dog.bark = function () {
+  console.log("Barking");
+};
+dog.bark();
+dog.eat();
+dog.hasOwnProperty(bark);//error
+dog.hasOwnProperty(eat); //error
+```
+
+#### My Submission -evaluation
+
+```
+dog.bark() works because bark is an own property of dog.
+dog.eat() works because eat is inherited from animal.
+Object.create(animal) correctly sets animal as dog’s prototype.
+```
+
+However, the final checks contain errors:
+
+```JS
+dog.hasOwnProperty(bark);
+dog.hasOwnProperty(eat);
+```
+
+bark and eat are treated as variables, causing a ReferenceError at day-11-objects-and-prototypes.js:131.
+
+Use property-name strings:
+
+```JS
+console.log(dog.hasOwnProperty("bark")); // true
+console.log(dog.hasOwnProperty("eat")); // false
+```
+
+You should also explicitly check the prototype:
+
+```JS
+console.log(Object.getPrototypeOf(dog) === animal); // true
+```
+
 ---
 
 # Task 9 — `in` vs `hasOwnProperty`
@@ -492,6 +573,16 @@ dog.hasOwnProperty("eat");
 `hasOwnProperty()` asks:
 
 > Does this object itself own this property?
+
+```JS
+console.log("bark" in dog);//true
+console.log("eat" in dog);//true
+
+console.log(dog.hasOwnProperty("bark"));//true
+console.log(dog.hasOwnProperty("eat"));//false
+
+
+```
 
 ---
 
@@ -598,6 +689,21 @@ Don't worry about memorising every detail yet.
 
 The goal is to understand that the chain eventually terminates at `null`.
 
+The full chain is:
+
+```text
+user11
+  ├── own property: name = "Manju"
+  ↓ prototype
+parent
+  ├── own property: country = "Australia"
+  ↓ prototype
+Object.prototype
+  ├── shared methods such as hasOwnProperty()
+  ↓ prototype
+null
+```
+
 ---
 
 # Task 12 — Predict Before Running
@@ -618,7 +724,7 @@ const employee = Object.create(person);
 
 employee.name = "Employee";
 
-employee.greet();
+employee.greet(); // "prints employee"
 ```
 
 Then answer:
@@ -651,109 +757,6 @@ employee.greet()
 ```
 
 ---
-
-# Deep Questions
-
-Try to answer these in your own words:
-
-### 1. What is a prototype?
-
-Don't give a textbook definition. Explain it using:
-
-```text
-object → prototype → prototype → ...
-```
-
-### 2. Why do prototypes exist?
-
-What problem does sharing methods through a prototype solve?
-
-### 3. What is the difference between:
-
-```js
-user.name;
-```
-
-and:
-
-```js
-user.greet();
-```
-
-when both properties might be found through the prototype chain?
-
-### 4. Does JavaScript copy a prototype method into the object?
-
-Explain what actually happens.
-
-### 5. How are these three concepts different?
-
-```text
-Scope
-this
-Prototype
-```
-
-You learned the first two in Days 8–10. Today add the third.
-
-### 6. What happens when a property isn't found?
-
-For example:
-
-```js
-user.someRandomProperty;
-```
-
-Explain the lookup process.
-
----
-
-# Stretch Challenge — Build Your Own Prototype-Based Users
-
-Create a shared prototype:
-
-```text
-userPrototype
-    ├── greet()
-    └── describe()
-```
-
-Create three users using:
-
-```js
-Object.create(userPrototype);
-```
-
-Each user should have their own:
-
-```text
-name
-role
-```
-
-All users should share the same prototype methods.
-
-Then prove that:
-
-```js
-user1.greet === user2.greet;
-```
-
-is `true`.
-
-But also prove that:
-
-```js
-user1 !== user2;
-```
-
-is `true`.
-
-Finally explain **why this is useful**.
-
----
-
-# Day 11 Mental Model
 
 By the end of today, you should be able to mentally see:
 
