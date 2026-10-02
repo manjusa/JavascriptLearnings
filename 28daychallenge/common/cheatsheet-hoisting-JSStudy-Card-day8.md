@@ -397,6 +397,16 @@ TypeError: expressionVar is not a function
 
 ---
 
+# c) Constructor Functions
+
+```JS
+function User(name, age) {
+  this.name = name;
+  this.age = age;
+}
+const user1 = new User("John", 30); //ctor fn
+```
+
 # JavaScript Study Card
 
 ## Function Declaration
