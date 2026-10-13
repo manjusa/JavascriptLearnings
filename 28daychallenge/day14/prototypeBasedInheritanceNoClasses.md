@@ -436,29 +436,30 @@ console.log(developer.name);
 console.log(developer.programmingLanguage);
 ```
 
-### Requirement
+### Submission
 
-Do NOT duplicate the parent constructor's logic unnecessarily.
+Task3 already taken care by Task2
+Remember we did :
 
-Use the parent constructor to initialise the parent-related data.
-
-### Hint
-
-Think about:
-
-```js
-Person.call(this, name);
+```JS
+function Developer1(name, lang) {
+  Person1.call(this, name);
+  this.programmingLanguage = lang;
+}
 ```
 
-Ask yourself:
+When you create `new Developer1("Manju", "C#")`:
 
-> What does `call()` allow us to control?
+1. `Developer1` receives both arguments.
+2. `Person1.call(this, name)` runs `Person1` using the same this—the new developer instance—and sets its `name`.
+3. `Developer1` sets `programmingLanguage` on that same instance.
 
-And:
+   So the instance gets both properties without duplicating the parent’s name-initialization logic. Task 3 is meant as the next step after Task 2, but you’ve already included it. To explicitly verify Task 3, add:
 
-> What should `this` refer to when `Person` runs?
-
-This connects directly to your Day 9 work on `call()`.
+```JS
+console.log(developer.name); // Manju
+console.log(developer.programmingLanguage); // C#
+```
 
 ---
 

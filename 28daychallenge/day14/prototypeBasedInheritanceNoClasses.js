@@ -31,14 +31,21 @@ Person1.prototype.greet = function () {
   console.log("name is", this.name);
 };
 
-function Developer1(lang) {
+function Developer1(name, lang) {
+  Person1.call(this, name);
   this.programmingLanguage = lang;
 }
+
+Developer1.prototype = Object.create(Person1.prototype);
+Developer1.prototype.constructor = Developer1;
 
 Developer1.prototype.code = function () {
   console.log("lang is", this.programmingLanguage);
 };
 
-const user1 = new Developer1("C#");
-const user1Name = new Person1("manju");
-user1.prototype = Object.create(user1Name.prototype);
+const developer1 = new Developer1("Manju", "C#");
+
+developer1.greet(); // name is Manju
+developer1.code(); // lang is C#
+
+//task3 already taken care in task2
