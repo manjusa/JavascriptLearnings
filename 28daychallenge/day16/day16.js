@@ -57,3 +57,34 @@ console.log(task2Res);
 const skills = ["JavaScript", "C#", "JavaScript", "React", "C#", "SQL"];
 const uniqueSkills = [...new Set(skills)];
 console.log(uniqueSkills);
+
+// Task 4 — Flatten Nested Arrays
+
+const numbers = [
+  [1, 2],
+  [3, 4],
+  [5, 6],
+];
+
+const nestedNumbers = [
+  [1, 2],
+  [3, [4, 5]],
+  [6, [7, [8, 9]]],
+];
+console.log(numbers.flat());
+console.log(nestedNumbers.flat(Infinity));
+
+//Task5 Task 5 — Combine Array Methods
+
+/*
+Using the original `employees` array, return the names of employees who:
+
+1. Belong to the IT department.
+2. Earn at least 90,000.
+3. Are sorted alphabetically by name.*/
+console.log(
+  employees
+    .filter((e) => e.department === "IT" && e.salary >= 90000)
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((x) => x.name),
+);
